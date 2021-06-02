@@ -1,10 +1,11 @@
-import Navbar from "./components/Navbar/Navbar";
+import React from "react";
 import './App.css'
 import { BrowserRouter, Route } from 'react-router-dom'
-import Home from "./components/Screens/Home/Home";
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Home/Home";
+import Profile from "./components/Profile/Profile";
 import SignIn from "./components/Screens/SignIn/SignIn";
 import Signup from "./components/Screens/Signup/Signup";
-import Profile from "./components/Screens/Profile/Profile";
 function App() {
   return (
     <BrowserRouter>
@@ -22,7 +23,6 @@ function App() {
         <Profile></Profile>
       </Route>
     </BrowserRouter>
-
   );
 }
 
