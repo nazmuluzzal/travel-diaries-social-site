@@ -2,7 +2,7 @@ import Navbar from "./components/Navbar/Navbar";
 import './App.css'
 import { BrowserRouter, Route } from 'react-router-dom'
 import Home from "./components/Screens/Home/Home";
-import Login from "./components/Screens/Login/Login";
+import SignIn from "./components/Screens/SignIn/SignIn";
 import Signup from "./components/Screens/Signup/Signup";
 import Profile from "./components/Screens/Profile/Profile";
 function App() {
@@ -13,7 +13,7 @@ function App() {
         <Home></Home>
       </Route>
       <Route path="/signin">
-        <Login></Login>
+        <SignIn></SignIn>
       </Route>
       <Route path="/signup">
         <Signup></Signup>
