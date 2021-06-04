@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import M from "materialize-css";
 
@@ -8,6 +8,38 @@ const CreatePost = () => {
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
   const [url, setUrl] = useState("");
+  useEffect(() => {
+    if (url) {
+      fetch("/createpost", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("jwt")
+        },
+        body: JSON.stringify({
+          title,
+          body,
+          pic: url,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log(data);
+          if (data.error) {
+            M.toast({ html: data.error, classes: "#c62828 red darken-3" });
+          } else {
+            M.toast({
+              html: "Created Post Successfully",
+              classes: "#43a047 green darken-1",
+            });
+            history.push("/");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [url])
 
   useEffect(() => {
     if (url) {
