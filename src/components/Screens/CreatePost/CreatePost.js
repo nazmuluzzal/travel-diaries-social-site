@@ -14,7 +14,7 @@ const CreatePost = () => {
         method: "post",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + localStorage.getItem("jwt")
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
         body: JSON.stringify({
           title,
@@ -39,7 +39,7 @@ const CreatePost = () => {
           console.log(err);
         });
     }
-  }, [url])
+  }, [url]);
 
   const postDetails = () => {
     const data = new FormData();
