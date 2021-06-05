@@ -19,10 +19,10 @@ const NavBar = ()=>{
        if(user){
            return [
             <li key="1"><i  data-target="modal1" className="large material-icons modal-trigger" style={{color:"black"}}>search</i></li>,
-            <li key="2"><Link to="/profile">Profile</Link></li>,
-            <li key="3"><Link to="/create">Create Post</Link></li>,
-            <li key="4"><Link to="/myfollowingpost">My following Posts</Link></li>,
-            <li  key="5">
+            <li className="navLink" key="2"><Link to="/profile">Profile</Link></li>,
+            <li className="navLink" key="3"><Link to="/create">Create Post</Link></li>,
+            <li className="navLink" key="4"><Link to="/myfollowingpost">My following Posts</Link></li>,
+            <li className="navLink" key="5">
              <button className="btn #c62828 red darken-3"
             onClick={()=>{
               localStorage.clear()
@@ -38,8 +38,8 @@ const NavBar = ()=>{
            ]
        }else{
          return [
-          <li  key="6"><Link to="/signin">Signin</Link></li>,
-          <li  key="7"><Link to="/signup">Signup</Link></li>
+          <li className="navLink"  key="6"><Link to="/signin">Signin</Link></li>,
+          <li className="navLink" key="7"><Link to="/signup">Signup</Link></li>
          
          ]
        }
@@ -63,7 +63,7 @@ const NavBar = ()=>{
      }
     return(
         <nav>
-        <div className="nav-wrapper white">
+        <div className="nav-wrapper navLink white">
           <Link to={user?"/":"/signin"} className="brand-logo left">Travel Diaries</Link>
           <ul id="nav-mobile" className="right">
              {renderList()}
