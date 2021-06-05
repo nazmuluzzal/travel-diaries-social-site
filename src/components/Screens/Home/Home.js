@@ -1,195 +1,74 @@
-import React, { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../../App";
-import { Link } from "react-router-dom";
-const Home = () => {
-  const [data, setData] = useState([]);
-  const { state, dispatch } = useContext(UserContext);
-  useEffect(() => {
-    fetch("/allpost", {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        setData(result.posts);
-      });
-  }, []);
-  const likePost = (id) => {
-    fetch("/like", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        const newData = data.map((item) => {
-          if (item._id === result._id) {
-            return result;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => console.log(err));
-  };
-  const unlikePost = (id) => {
-    fetch("/unlike", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId: id,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        // console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result._id) {
-            return result;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => console.log(err));
-  };
+import React, { useEffect } from "react";
+import './App.css'
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom'
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Screens/Home/Home";
+import Profile from "./components/Screens/Profile/Profile";
+import SignIn from "./components/Screens/SignIn/SignIn";
+import Signup from "./components/Screens/Signup/Signup";
+import CreatePost from "./components/Screens/CreatePost/CreatePost";
+import { Provider, useDispatch } from "react-redux";
+import store from "./redux/store"
+import {loggedUser} from "./redux/action/userAction"
+import UserProfile from "./components/Screens/UserProfile/UserProfile";
+import SubscribesUserPosts from "./components/Screens/SubscribesUserPosts/SubscribesUserPosts";
+import NewPassword from "./components/Screens/NewPassword";
+import Reset from "./components/Screens/Reset";
 
-  const makeComment = (text, postId) => {
-    fetch("/comment", {
-      method: "put",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-      body: JSON.stringify({
-        postId,
-        text,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.map((item) => {
-          if (item._id === result._id) {
-            return result;
-          } else {
-            return item;
-          }
-        });
-        setData(newData);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+const Routing = ()=>{
+  const history = useHistory()
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    const user = JSON.parse(localStorage.getItem("user"))
+    if(user){
+      dispatch(loggedUser(user))
+    }else{
+      if(!history.location.pathname.startsWith('/reset'))
+           history.push('/signin')
+    }
+  },[dispatch,history])
+  return(
+    <Switch>
+      <Route exact path="/" >
+      <Home />
+      </Route>
+      <Route path="/signin">
+        <SignIn />
+      </Route>
+      <Route path="/signup">
+        <Signup />
+      </Route>
+      <Route exact path="/profile">
+        <Profile />
+      </Route>
+      <Route path="/create">
+        <CreatePost/>
+      </Route>
+      <Route path="/profile/:userid">
+        <UserProfile />
+      </Route>
+      <Route path="/myfollowingpost">
+        <SubscribesUserPosts />
+      </Route>
+      <Route exact path="/reset">
+        <Reset/>
+      </Route>
+      <Route path="/reset/:token">
+        <NewPassword />
+      </Route>
+    </Switch>
+  )
+}
 
-  const deletePost = (postid) => {
-    fetch(`/deletePost/${postid}`, {
-      method: "delete",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwt"),
-      },
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        const newData = data.filter((item) => {
-          return item._id !== result._id;
-        });
-        setData(newData);
-      });
-  };
-
+function App() {  
   return (
-    <div className="home">
-      {data.map((item) => {
-        return (
-          <div className="card home-card" key={item._id}>
-            <h5>
-              <Link
-                to={
-                  item.postedBy._id !== state._id
-                    ? "/profile/" + item.postedBy._id
-                    : "/profile"
-                }
-              >
-                {item.postedBy.name}
-              </Link>
-              {item.postedBy._id === state._id && (
-                <i
-                  className="material-icons"
-                  style={{ float: "right", color: "red" }}
-                  onClick={() => deletePost(item._id)}
-                >
-                  delete
-                </i>
-              )}
-            </h5>
-            <div className="card-image">
-              <img src={item.photo} alt="" />
-            </div>
-            <div className="card-content">
-              <i className="material-icons" style={{ color: "red" }}>
-                favorite
-              </i>
-              {item.likes.includes(state._id) ? (
-                <i
-                  className="material-icons"
-                  onClick={() => {
-                    unlikePost(item._id);
-                  }}
-                >
-                  thumb_down
-                </i>
-              ) : (
-                <i
-                  className="material-icons"
-                  onClick={() => {
-                    likePost(item._id);
-                  }}
-                >
-                  thumb_up
-                </i>
-              )}
-              <h6>{item.likes.length} likes</h6>
-              <h6>{item.title}</h6>
-              <p>{item.body}</p>
-              {item.comments.map((record) => {
-                return (
-                  <h6 key={record._id}>
-                    <span style={{ fontWeight: "500" }}>
-                      {record.postedBy.name}
-                    </span>{" "}
-                    {record.text}
-                  </h6>
-                );
-              })}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  makeComment(e.target[0].value, item._id);
-                }}
-              >
-                <input type="text" placeholder="add a comment" />
-              </form>
-            </div>
-          </div>
-        );
-      })}
-    </div>
+    <Provider store = {store}>
+    <BrowserRouter>
+      <Navbar />
+      <Routing />
+    </BrowserRouter>
+    </Provider>
   );
-};
+}
 
-export default Home;
+export default App;
