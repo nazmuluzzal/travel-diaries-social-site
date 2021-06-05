@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import { useHistory } from "react-router-dom";
 import M from "materialize-css";
 
@@ -8,7 +9,6 @@ const CreatePost = () => {
   const [body, setBody] = useState("");
   const [image, setImage] = useState("");
   const [url, setUrl] = useState("");
-
   const postDetails = () => {
     const data = new FormData();
     data.append("file", image);
@@ -26,7 +26,6 @@ const CreatePost = () => {
       .catch((err) => {
         console.log(err);
       });
-
     fetch("/createpost", {
       method: "post",
       headers: { "Content-Type": "application/json",

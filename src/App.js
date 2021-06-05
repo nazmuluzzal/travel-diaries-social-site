@@ -56,13 +56,11 @@ const Routing = ()=>{
       <Route path="/reset/:token">
         <NewPassword />
       </Route>
-      
     </Switch>
   )
 }
 
-function App() {
-  
+function App() {  
   return (
     <Provider store = {store}>
     <BrowserRouter>
