@@ -129,9 +129,6 @@ const UserProfile = () => {
                                     UnFollow
                             </button>
                             }
-
-
-
                         </div>
                     </div>
 
