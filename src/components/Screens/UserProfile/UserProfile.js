@@ -37,6 +37,7 @@ const UserProfile = () => {
         console.log(data);
       });
   };
+
   return (
     <>
       {userProfile ? (
