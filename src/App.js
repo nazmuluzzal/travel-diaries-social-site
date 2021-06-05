@@ -1,29 +1,29 @@
-import React, { useEffect, createContext, useReducer,useContext } from "react";
-import './App.css'
-import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom'
+import React, { useEffect, createContext, useReducer, useContext } from "react";
+import "./App.css";
+import { BrowserRouter, Route, Switch, useHistory } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./components/Screens/Home/Home";
 import Profile from "./components/Screens/Profile/Profile";
 import SignIn from "./components/Screens/SignIn/SignIn";
 import Signup from "./components/Screens/Signup/Signup";
 import CreatePost from "./components/Screens/CreatePost/CreatePost";
-import { reducer, initialState } from './reducers/userReducer'
+import { reducer, initialState } from "./reducers/userReducer";
+import UserProfile from "./components/Screens/UserProfile/UserProfile";
 
-export const UserContext = createContext()
+export const UserContext = createContext();
 
 const Routing = () => {
-  const history = useHistory()
-  const {state, dispatch} = useContext(UserContext)
+  const history = useHistory();
+  const { state, dispatch } = useContext(UserContext);
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"))
+    const user = JSON.parse(localStorage.getItem("user"));
 
-    if (user){
-      dispatch({type:"USER",payload:user})
+    if (user) {
+      dispatch({ type: "USER", payload: user });
+    } else {
+      history.push("/signin");
     }
-    else{
-      history.push("/signin")
-    }
-  },[])
+  }, []);
   return (
     <Switch>
       <Route exact path="/">
@@ -35,20 +35,23 @@ const Routing = () => {
       <Route path="/signup">
         <Signup></Signup>
       </Route>
-      <Route path="/profile">
+      <Route exact path="/profile">
         <Profile></Profile>
       </Route>
       <Route path="/create">
         <CreatePost></CreatePost>
       </Route>
+      <Route path="/profile/:userid">
+        <UserProfile></UserProfile>
+      </Route>
     </Switch>
-  )
-}
+  );
+};
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <UserContext.Provider value={{state,dispatch}}>
+    <UserContext.Provider value={{ state, dispatch }}>
       <BrowserRouter>
         <Navbar></Navbar>
         <Routing></Routing>
